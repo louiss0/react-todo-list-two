@@ -28,11 +28,32 @@ const TodoItem: FunctionComponent<Props> = (props) => {
   const cancelEditing: FocusEventHandler = () => {
     setEditing("not-editing");
   };
-  const finishEditing: KeyboardEventHandler = () => {};
-  setEditing("edited");
+  const finishEditing: KeyboardEventHandler = () => {
+    setEditing("edited");
+  };
+
+  const renderMap: Record<typeof editing, JSX.Element> = {
+    edited: <div>This thing was edited</div>,
+    editing: (
+      <input
+        type="text"
+        id="input-text"
+        value={inputText}
+        onInput={(event) => setText(event.currentTarget.value)}
+        className="leading-10 px-3 text-lg w-3/5 caret-slate-600 bg-inherit"
+        onBlur={cancelEditing}
+        onKeyDown={finishEditing}
+      />
+    ),
+    "not-editing": (
+      <button onClick={startEditing} disabled={completed}>
+        <span>{text}</span>
+      </button>
+    ),
+  };
 
   return (
-    <div className="px-6 py-2">
+    <div id={`todo-item-${id}`} className="px-6 py-2">
       <div className="flex gap-6 justify-between items-center">
         <button
           className="px-4 py-2 transition-opacity duration-300 hover:opacity-90"
@@ -45,18 +66,7 @@ const TodoItem: FunctionComponent<Props> = (props) => {
         <label htmlFor="input-text" className="sr-only">
           <div>Edit item here</div>
         </label>
-        <input
-          type="text"
-          id="input-text"
-          value={inputText}
-          onInput={(event) => setText(event.currentTarget.value)}
-          className="leading-10 px-3 text-lg w-3/5 caret-slate-600 bg-inherit"
-          onBlur={cancelEditing}
-          onKeyDown={finishEditing}
-        />
-        <button onClick={startEditing} disabled={completed}>
-          <span>{text}</span>
-        </button>
+        {renderMap[editing]}
         <button
           className="px-4 py-2 transition-opacity duration-300 hover:opacity-90"
           onClick={() => handleDelete(id)}

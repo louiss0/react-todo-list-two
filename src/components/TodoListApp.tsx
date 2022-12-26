@@ -9,10 +9,10 @@ export type TodoListAppHandlers = {
   handleAddTask(payload: Task): void;
 };
 const TodoListApp = () => {
-  const [tasks, setTasks] = useState<Tasks>([]);
+  const [tasks, setTasks] = useState<Tasks>([new Task("Clean my room")]);
 
   const handleAddTask: TodoListAppHandlers["handleAddTask"] = (task) => {
-    setTasks((tasks) => [...tasks, task]);
+    setTasks([...tasks, task]);
   };
 
   const handleChecked: TodoListAppHandlers["handleChecked"] = ({
@@ -30,12 +30,21 @@ const TodoListApp = () => {
   };
 
   return (
-    <div>
-      <TodoListForm handleAddTask={handleAddTask} />
-      <div className="w-10/12">
-        {tasks.map((task) => (
-          <TodoItem {...{ ...task, handleChecked, handleDelete }} />
-        ))}
+    <div className="w-8/12 mx-auto">
+      <div className="grid gap-6">
+        <TodoListForm handleAddTask={handleAddTask} />
+        <div>
+          {tasks.map((task) => (
+            <TodoItem
+              key={task.id}
+              {...{
+                ...task,
+                handleChecked,
+                handleDelete,
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
