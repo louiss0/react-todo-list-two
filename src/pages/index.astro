@@ -1,0 +1,27 @@
+---
+import TodoListApp from "../components/TodoListApp";
+
+const title = "React To Do List";
+const description = "This is a todo llist created with react astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <div class="py-20">
+      <div class="container mx-auto md:w-4/5 lg:w-3/5">
+        <div class="grid place-items-center">
+          <h1 class="text-4xl">{title}</h1>
+          <TodoListApp client:only="react" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
