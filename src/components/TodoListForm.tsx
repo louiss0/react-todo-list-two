@@ -34,11 +34,11 @@ const TodoListForm: FunctionComponent<Props> = ({ handleAddTask }) => {
           break;
         case "submitting":
           return el?.validity.tooShort
-            ? setSubmitting("submitted")
-            : setSubmitting("not-submitting");
+            ? setSubmitting("not-submitting")
+            : setSubmitting("submitted");
         case "submitted":
-          setText("");
           el?.focus();
+          setText("");
           setSubmitting("not-submitting");
           break;
       }
