@@ -12,7 +12,7 @@ import type { TodoListAppHandlers } from "./TodoListApp";
 
 export type Props = Omit<TodoListAppHandlers, "handleAddTask"> & Task;
 
-const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
+const TodoItem: FunctionComponent<Props> = (props) => {
   const { id, completed, text, handleChecked, handleDelete, ...rest } = props;
 
   const [editing, setEditing] = useState<"editing" | "edited" | "not-editing">(
@@ -36,10 +36,10 @@ const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
     el?.focus();
   }, []);
 
-  let timer: number;
+  let timer: number | undefined;
+
   useEffect(() => {
     switch (editing) {
-      case "editing":
       case "not-editing":
         setInputText((value) => (value.length === 0 ? text : value));
         break;
@@ -56,16 +56,21 @@ const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const renderMap: Record<typeof editing, JSX.Element> = {
     edited: <div>This thing is edited</div>,
     editing: (
-      <input
-        type="text"
-        id="input-text"
-        ref={inputRefHandler}
-        value={inputText}
-        onInput={(event) => setInputText(event.currentTarget.value.trim())}
-        className="leading-10 px-3 text-lg w-3/5 caret-slate-600 bg-inherit"
-        onBlur={cancelEditing}
-        onKeyDown={finishEditing}
-      />
+      <>
+        <label htmlFor="input-text" className="sr-only">
+          Edit item here
+        </label>
+        <input
+          type="text"
+          id="input-text"
+          ref={inputRefHandler}
+          value={inputText}
+          onInput={(event) => setInputText(event.currentTarget.value.trim())}
+          className="leading-10 px-3 text-lg w-3/5 caret-slate-600 bg-inherit"
+          onBlur={cancelEditing}
+          onKeyDown={finishEditing}
+        />
+      </>
     ),
     "not-editing": (
       <button disabled={completed} onClick={startEditing}>
@@ -79,7 +84,7 @@ const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
   };
 
   return (
-    <div id={`todo-item-${id}`} className="px-6 py-2" ref={ref} {...rest}>
+    <div id={`todo-item-${id}`} className="px-6 py-2" {...rest}>
       <div className="flex gap-6 justify-between items-center">
         <button
           className="px-4 py-2 transition-opacity duration-300 hover:opacity-90"
@@ -88,9 +93,7 @@ const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
         >
           <CheckCircleIcon />
         </button>
-        <label htmlFor="input-text" className="sr-only">
-          <div>Edit item here</div>
-        </label>
+
         {renderMap[editing]}
         <button
           className="px-4 py-2 transition-opacity duration-300 hover:opacity-90"
@@ -102,7 +105,7 @@ const TodoItem = forwardRef<HTMLDivElement, Props>((props, ref) => {
       </div>
     </div>
   );
-});
+};
 
 const CheckCircleIcon: FunctionComponent<SVGProps<SVGSVGElement>> = ({
   className,

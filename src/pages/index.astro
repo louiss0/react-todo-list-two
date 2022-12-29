@@ -23,9 +23,27 @@ const description = "This is a todo llist created with react astro";
           <div class="grid place-items-center">
             <h1 class="text-4xl py-2 px-6 font-bold">{title}</h1>
           </div>
+
           <TodoListApp client:only="react" />
         </div>
       </div>
     </div>
   </body>
 </html>
+
+<style lang="postcss" is:global>
+  .fade {
+    &-enter,
+    &-exit-done {
+      @apply opacity-0;
+    }
+    &-exit,
+    &-enter-done {
+      @apply opacity-100;
+    }
+    &-enter-active,
+    &-exit-active {
+      @apply transition-opacity duration-1000 ease-in;
+    }
+  }
+</style>
